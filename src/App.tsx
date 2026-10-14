@@ -8,6 +8,7 @@ import type { FlowMeter, MeterDraft } from "./types";
 import { draftToRecord } from "./meterFields";
 import { FlowMeterMap, type PipeProperties } from "./components/FlowMeterMap";
 import { PipeInfoPanel } from "./components/PipeInfoPanel";
+import { StreetViewPane } from "./components/StreetViewPane";
 import { FlowMeterForm } from "./components/FlowMeterForm";
 import { GOOGLE_MAPS_API_KEY, MAPBOX_TILESET_ID } from "./config";
 import "./App.css";
@@ -41,6 +42,7 @@ function FlowMeterApp({ signOut, userEmail }: FlowMeterAppProps) {
   } | null>(null);
   const [selectedPipe, setSelectedPipe] = useState<PipeProperties | null>(null);
   const [addOpen, setAddOpen] = useState(false);
+  const [streetViewOpen, setStreetViewOpen] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -109,7 +111,7 @@ function FlowMeterApp({ signOut, userEmail }: FlowMeterAppProps) {
           </div>
         </header>
 
-        <div className="app-body">
+        <div className={streetViewOpen ? "app-body split" : "app-body"}>
           <section className="map-pane">
             <FlowMeterMap
               meters={meters}
@@ -147,6 +149,12 @@ function FlowMeterApp({ signOut, userEmail }: FlowMeterAppProps) {
 
             {/* The list pane is gone, so a load failure surfaces over the map. */}
             {loadError && <p className="map-error">{loadError}</p>}
+          </section>
+
+          {/* Always mounted: Pegman needs its linked panorama to exist before
+              it is dragged. The pane only takes width once it is visible. */}
+          <section className="street-view-pane">
+            <StreetViewPane onVisibleChange={setStreetViewOpen} />
           </section>
         </div>
       </div>

@@ -127,6 +127,9 @@ export function FlowMeterMap({
 
   return (
     <Map
+      // Addressable id so the Street View pane, which sits outside <Map>, can
+      // reach this instance with useMap("main").
+      id="main"
       mapId={GOOGLE_MAPS_MAP_ID}
       defaultCenter={DEFAULT_CENTER}
       defaultZoom={DEFAULT_ZOOM}

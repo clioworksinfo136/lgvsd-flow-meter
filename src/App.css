@@ -424,3 +424,145 @@ button.danger:hover:not(:disabled) {
   height: 100%;
   padding: 2rem 1rem;
 }
+
+/* ---------- photo lightbox ---------- */
+
+.photo-strip button {
+  padding: 0;
+  border: none;
+  background: none;
+  line-height: 0;
+  cursor: zoom-in;
+}
+
+.photo-strip button:hover img {
+  border-color: var(--accent);
+}
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgb(15 23 42 / 82%);
+}
+
+.lightbox-frame {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  max-width: min(90vw, 60rem);
+  max-height: 90vh;
+}
+
+.lightbox-frame > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #e2e8f0;
+  font-size: 0.8125rem;
+}
+
+.lightbox-frame > header button {
+  background: none;
+  color: #e2e8f0;
+  font-size: 1.5rem;
+  line-height: 1;
+  padding: 0 0.3em;
+}
+
+.lightbox-frame > header button:hover {
+  background: none;
+  color: #fff;
+}
+
+.lightbox-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+}
+
+.lightbox-stage img {
+  max-width: 100%;
+  /* Leave room for the header and footer rows inside the 90vh frame. */
+  max-height: calc(90vh - 7rem);
+  object-fit: contain;
+  border-radius: 6px;
+  background: #0f172a;
+}
+
+.lightbox-stage .nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2.4rem;
+  height: 2.4rem;
+  padding: 0;
+  font-size: 1.6rem;
+  line-height: 1;
+  border-radius: 50%;
+  background: rgb(15 23 42 / 70%);
+  color: #fff;
+}
+
+.lightbox-stage .nav:hover {
+  background: rgb(15 23 42 / 90%);
+}
+
+.lightbox-stage .nav.prev {
+  left: 0.5rem;
+}
+
+.lightbox-stage .nav.next {
+  right: 0.5rem;
+}
+
+.lightbox-frame > footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.lightbox-frame > footer .confirm,
+.lightbox-frame > footer .error {
+  color: #e2e8f0;
+  font-size: 0.8125rem;
+  margin: 0;
+}
+
+.lightbox-frame > footer button {
+  font-size: 0.8125rem;
+  padding: 0.4em 0.9em;
+}
+
+/* ---------- street view split ---------- */
+
+.street-view-pane {
+  /* Collapsed until Pegman is dropped; the panorama still exists inside. */
+  width: 0;
+  min-width: 0;
+  overflow: hidden;
+  border-left: 1px solid var(--border);
+  transition: width 0.18s ease;
+}
+
+.app-body.split .street-view-pane {
+  width: 50%;
+}
+
+.app-body.split .map-pane {
+  /* Left half, so the cone stays visible beside the panorama. */
+  flex: 0 0 50%;
+}
+
+.street-view-canvas {
+  width: 100%;
+  height: 100%;
+}

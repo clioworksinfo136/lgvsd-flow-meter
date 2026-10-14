@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type ChangeEvent } from "react";
-import { getUrl, list, uploadData } from "aws-amplify/storage";
-
-type Photo = { path: string; url: string };
+import { getUrl, list, remove, uploadData } from "aws-amplify/storage";
+import { PhotoLightbox, type Photo } from "./PhotoLightbox";
 
 type Props = {
   /** The record id, not meterID — meterID is user-editable and would orphan files. */
@@ -34,6 +33,7 @@ export function MeterPhotos({ meterId }: Props) {
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const prefix = `flow-meters/${meterId}/`;
@@ -61,6 +61,11 @@ export function MeterPhotos({ meterId }: Props) {
       active = false;
     };
   }, [refresh]);
+
+  async function handleDelete(path: string) {
+    await remove({ path });
+    await refresh();
+  }
 
   async function handleFile(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -97,14 +102,30 @@ export function MeterPhotos({ meterId }: Props) {
     <div className="meter-photos">
       {photos.length > 0 && (
         <ul className="photo-strip">
-          {photos.map((photo) => (
+          {photos.map((photo, position) => (
             <li key={photo.path}>
-              <a href={photo.url} target="_blank" rel="noreferrer">
+              <button
+                type="button"
+                onClick={() => setLightboxIndex(position)}
+                aria-label={`Open photo ${position + 1}`}
+              >
                 <img src={photo.url} alt="Meter photo" loading="lazy" />
-              </a>
+              </button>
             </li>
           ))}
         </ul>
+      )}
+
+      {/* Guard the upper bound too: an index left past the end after a delete
+          would mount an invisible overlay that still holds the scroll lock. */}
+      {lightboxIndex !== null && lightboxIndex < photos.length && (
+        <PhotoLightbox
+          photos={photos}
+          index={lightboxIndex}
+          onIndexChange={setLightboxIndex}
+          onClose={() => setLightboxIndex(null)}
+          onDelete={handleDelete}
+        />
       )}
 
       {error && <p className="error">{error}</p>}
