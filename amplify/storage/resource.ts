@@ -15,7 +15,14 @@ import { defineStorage } from "@aws-amplify/backend";
 export const storage = defineStorage({
   name: "flowMeterFiles",
   access: (allow) => ({
-    "flow-meters/*": [allow.authenticated.to(["read", "write", "delete"])],
+    // Guest access is deliberate: the app has no sign-in, so every visitor is
+    // an unauthenticated identity. It means anyone who can reach the identity
+    // pool can upload to and delete from this prefix — revisit if the app ever
+    // gains authentication.
+    "flow-meters/*": [
+      allow.guest.to(["read", "write", "delete"]),
+      allow.authenticated.to(["read", "write", "delete"]),
+    ],
     "private/{entity_id}/*": [allow.entity("identity").to(["read", "write", "delete"])],
   }),
 });

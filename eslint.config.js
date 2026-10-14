@@ -47,4 +47,9 @@ export default defineConfig([{
             allowConstantExport: true,
         }],
     },
-}, globalIgnores(["**/dist"])]);
+}, globalIgnores([
+    "**/dist",
+    // Generated CDK deployment artifacts written by `ampx sandbox`; bundled
+    // CommonJS that trips every browser-global and no-require rule.
+    "**/.amplify",
+])]);

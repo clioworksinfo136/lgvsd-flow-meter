@@ -11,6 +11,11 @@
   },
   "dependencies": {
     "@aws-amplify/ui-react": "~6.13.2",
+    "@deck.gl/core": "^9.4.0",
+    "@deck.gl/geo-layers": "^9.4.0",
+    "@deck.gl/google-maps": "^9.4.0",
+    "@deck.gl/layers": "^9.4.0",
+    "@vis.gl/react-google-maps": "^1.10.1",
     "aws-amplify": "~6.15.10",
     "react": "~18.3.1",
     "react-dom": "~18.3.1"
@@ -38,5 +43,10 @@
     "tsx": "^4.23.15",
     "typescript": "~5.9.3",
     "vite": "~7.3.1"
+  },
+  "allowScripts": {
+    "esbuild@0.27.2": true,
+    "esbuild@0.28.2": true,
+    "esbuild@0.25.12": true
   }
 }
