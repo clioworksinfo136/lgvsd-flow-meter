@@ -40,3 +40,31 @@
 .read-the-docs {
   color: #888;
 }
+
+.meter-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 24rem;
+  margin: 0 auto 2rem;
+  text-align: left;
+}
+
+.meter-list {
+  list-style: none;
+  padding: 0;
+  text-align: left;
+  max-width: 24rem;
+  margin: 0 auto;
+}
+
+.meter-list li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #8884;
+}
+
+.meter-list .coords,
+.meter-list .notes {
+  font-size: 0.875rem;
+  color: #888;
+}
