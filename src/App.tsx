@@ -22,7 +22,7 @@ function MissingKeyNotice() {
       <p>
         Set <code>VITE_GOOGLE_MAPS_API_KEY</code> and{" "}
         <code>VITE_MAPBOX_ACCESS_TOKEN</code> in a <code>.env.local</code> file,
-        then restart the dev server. See <code>.env.example</code>.
+        then restart the dev server. See <code>.env.example No use</code>.
       </p>
     </div>
   );
