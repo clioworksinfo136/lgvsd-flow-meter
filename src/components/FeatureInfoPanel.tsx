@@ -1,22 +1,29 @@
 import { AttributeList } from "./AttributeList";
 
+export type SelectedFeature = {
+  /** What the feature is, e.g. "Gravity pipe" or "Manhole". */
+  title: string;
+  properties: Record<string, string | number | null>;
+};
+
 type Props = {
-  properties: Record<string, string | number | null> | null;
+  feature: SelectedFeature | null;
   onClose: () => void;
 };
 
 /** Attribute names are tileset-defined, so every property is listed as-is. */
-export function PipeInfoPanel({ properties, onClose }: Props) {
-  if (!properties) return null;
+export function FeatureInfoPanel({ feature, onClose }: Props) {
+  if (!feature) return null;
+  const { title, properties } = feature;
 
   const entries = Object.entries(properties)
     .filter(([, value]) => value !== null && value !== "")
     .map(([key, value]) => [key, String(value)] as [string, string]);
 
   return (
-    <div className="pipe-panel">
+    <div className="feature-panel">
       <header>
-        <strong>Gravity pipe</strong>
+        <strong>{title}</strong>
         <button type="button" className="delete" onClick={onClose} aria-label="Close">
           ×
         </button>

@@ -17,6 +17,8 @@ import {
   readPipeId,
   type PipeProperties,
 } from "../layers/gravityPipes";
+import { createManholeLayer, readManholeId } from "../layers/manholes";
+import type { SelectedFeature } from "./FeatureInfoPanel";
 import { DEFAULT_CENTER, DEFAULT_ZOOM, GOOGLE_MAPS_MAP_ID } from "../config";
 
 type Props = {
@@ -25,7 +27,7 @@ type Props = {
   onSelect: (id: string | null) => void;
   /** Fired when the user clicks bare map, so the form can pick up coordinates. */
   onPickLocation: (lat: number, lng: number) => void;
-  onPipeClick: (properties: PipeProperties | null) => void;
+  onFeatureClick: (feature: SelectedFeature | null) => void;
   onSaveMeter: (id: string, draft: MeterDraft) => Promise<void>;
   onDeleteMeter: (id: string) => Promise<void>;
 };
@@ -75,7 +77,7 @@ export function FlowMeterMap({
   selectedId,
   onSelect,
   onPickLocation,
-  onPipeClick,
+  onFeatureClick,
   onSaveMeter,
   onDeleteMeter,
 }: Props) {
@@ -85,6 +87,9 @@ export function FlowMeterMap({
   const [hoveredPipeId, setHoveredPipeId] = useState<string | number | null>(
     null
   );
+  const [hoveredManholeId, setHoveredManholeId] = useState<
+    string | number | null
+  >(null);
 
   const located = meters.filter(isLocated);
   const selected = located.find((meter) => meter.id === selectedId) ?? null;
@@ -102,27 +107,42 @@ export function FlowMeterMap({
           const properties = (info.object as { properties?: PipeProperties })
             ?.properties;
           if (!properties) return;
-          onPipeClick(properties);
+          onFeatureClick({ title: "Gravity pipe", properties });
+        },
+      }),
+      // After the pipes, so structures draw on top of the mains they join.
+      createManholeLayer({
+        selectedId: hoveredManholeId,
+        onHover: (info: PickingInfo) => {
+          const properties = (info.object as { properties?: PipeProperties })
+            ?.properties;
+          setHoveredManholeId(properties ? readManholeId(properties) : null);
+        },
+        onClick: (info: PickingInfo) => {
+          const properties = (info.object as { properties?: PipeProperties })
+            ?.properties;
+          if (!properties) return;
+          onFeatureClick({ title: "Manhole", properties });
         },
       }),
     ],
-    [hoveredPipeId, onPipeClick]
+    [hoveredPipeId, hoveredManholeId, onFeatureClick]
   );
 
   const handleMapClick = useCallback(
     (event: MapMouseEvent) => {
       // GoogleMapsOverlay listens on the same map click as <Map onClick>, so a
-      // click landing on a pipe would also drop a draft location pin. deck.gl's
-      // hover handler has already flagged the pipe under the cursor, so treat
-      // this click as the pipe's and leave the form alone.
-      if (hoveredPipeId != null) return;
+      // click landing on a pipe or manhole would also drop a draft location
+      // pin. deck.gl's hover handler has already flagged whatever is under the
+      // cursor, so treat this click as that feature's and leave the form alone.
+      if (hoveredPipeId != null || hoveredManholeId != null) return;
       const position = event.detail.latLng;
       if (!position) return;
       setDraftPin(position);
       onPickLocation(position.lat, position.lng);
       onSelect(null);
     },
-    [hoveredPipeId, onPickLocation, onSelect]
+    [hoveredPipeId, hoveredManholeId, onPickLocation, onSelect]
   );
 
   return (

@@ -6,8 +6,11 @@ import { generateClient } from "aws-amplify/data";
 import type { Schema } from "../amplify/data/resource";
 import type { FlowMeter, MeterDraft } from "./types";
 import { draftToRecord } from "./meterFields";
-import { FlowMeterMap, type PipeProperties } from "./components/FlowMeterMap";
-import { PipeInfoPanel } from "./components/PipeInfoPanel";
+import { FlowMeterMap } from "./components/FlowMeterMap";
+import {
+  FeatureInfoPanel,
+  type SelectedFeature,
+} from "./components/FeatureInfoPanel";
 import { StreetViewPane } from "./components/StreetViewPane";
 import { FlowMeterForm } from "./components/FlowMeterForm";
 import { GOOGLE_MAPS_API_KEY, MAPBOX_TILESET_ID } from "./config";
@@ -40,7 +43,8 @@ function FlowMeterApp({ signOut, userEmail }: FlowMeterAppProps) {
     lat: number;
     lng: number;
   } | null>(null);
-  const [selectedPipe, setSelectedPipe] = useState<PipeProperties | null>(null);
+  const [selectedFeature, setSelectedFeature] =
+    useState<SelectedFeature | null>(null);
   const [addOpen, setAddOpen] = useState(false);
   const [streetViewOpen, setStreetViewOpen] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -73,9 +77,9 @@ function FlowMeterApp({ signOut, userEmail }: FlowMeterAppProps) {
     if (errors?.length) throw new Error(errors[0].message);
   }, []);
 
-  // Memoized so the deck.gl layer is not rebuilt on every render.
-  const handlePipeClick = useCallback(
-    (properties: PipeProperties | null) => setSelectedPipe(properties),
+  // Memoized so the deck.gl layers are not rebuilt on every render.
+  const handleFeatureClick = useCallback(
+    (feature: SelectedFeature | null) => setSelectedFeature(feature),
     []
   );
 
@@ -118,13 +122,13 @@ function FlowMeterApp({ signOut, userEmail }: FlowMeterAppProps) {
               selectedId={selectedId}
               onSelect={setSelectedId}
               onPickLocation={(lat, lng) => setPickedLocation({ lat, lng })}
-              onPipeClick={handlePipeClick}
+              onFeatureClick={handleFeatureClick}
               onSaveMeter={saveMeter}
               onDeleteMeter={deleteMeter}
             />
-            <PipeInfoPanel
-              properties={selectedPipe}
-              onClose={() => setSelectedPipe(null)}
+            <FeatureInfoPanel
+              feature={selectedFeature}
+              onClose={() => setSelectedFeature(null)}
             />
 
             {addOpen && (

@@ -11,6 +11,10 @@ interface ImportMetaEnv {
   readonly VITE_MAPBOX_TILESET_ID?: string;
   /** Comma-separated source layers to read as gravity pipes. Unset = all. */
   readonly VITE_GRAVITY_PIPE_SOURCE_LAYERS?: string;
+  /** Mapbox tileset ID for manholes. Defaults to hazensawyer.baw0qm3p. */
+  readonly VITE_MANHOLE_TILESET_ID?: string;
+  /** Comma-separated source layers to read as manholes. */
+  readonly VITE_MANHOLE_SOURCE_LAYERS?: string;
 }
 
 interface ImportMeta {

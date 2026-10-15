@@ -29,3 +29,16 @@ const rawSourceLayers = import.meta.env.VITE_GRAVITY_PIPE_SOURCE_LAYERS?.trim();
 export const GRAVITY_PIPE_SOURCE_LAYERS = rawSourceLayers
   ? rawSourceLayers.split(",").map((name) => name.trim()).filter(Boolean)
   : ["lgvsd-gravity-basq8c"];
+
+/** Mapbox vector tileset holding the manhole structures. */
+export const MANHOLE_TILESET_ID =
+  import.meta.env.VITE_MANHOLE_TILESET_ID ?? "hazensawyer.baw0qm3p";
+
+/** Built to zoom 16, same as the gravity tileset. */
+export const MANHOLE_MAX_ZOOM = 16;
+
+/** Source layer(s) to decode as manholes. Defaults to the tileset's only one. */
+const rawManholeLayers = import.meta.env.VITE_MANHOLE_SOURCE_LAYERS?.trim();
+export const MANHOLE_SOURCE_LAYERS = rawManholeLayers
+  ? rawManholeLayers.split(",").map((name) => name.trim()).filter(Boolean)
+  : ["lgvsd-mh-79x1u9"];

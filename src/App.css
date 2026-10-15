@@ -209,9 +209,9 @@
   }
 }
 
-/* ---------- pipe inspector ---------- */
+/* ---------- feature inspector (pipes, manholes) ---------- */
 
-.pipe-panel {
+.feature-panel {
   position: absolute;
   left: 0.75rem;
   bottom: 0.75rem;
@@ -226,7 +226,7 @@
   box-shadow: 0 4px 16px rgb(15 23 42 / 18%);
 }
 
-.pipe-panel header {
+.feature-panel header {
   display: flex;
   align-items: center;
   justify-content: space-between;
